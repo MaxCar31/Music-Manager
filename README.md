@@ -1,7 +1,7 @@
 # Music Manager
 
 ## Descripción
-Music Manager es una aplicación web que permite a los usuarios gestionar álbumes y canciones, proporcionando funcionalidades para agregar álbumes, agregar canciones a los álbumes, buscar álbumes por año, y ver la lista de canciones de un álbum específico.
+Music Manager es una aplicación web que permite a los usuarios gestionar álbumes y canciones, proporcionando funcionalidades para agregar álbumes, agregar canciones a los álbumes, buscar álbumes por año, y ver la lista de canciones de un álbum específico. desarrollada por SCRIPTSCULPT SOLUTIONS. (Max Carrion, Juan Carrillo, Jhon Meza)
 
 ## Estructura del Proyecto
 music-manager/
@@ -65,4 +65,4 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para
 ![image](https://github.com/MaxCar31/Music-Manager/assets/141116497/4da9e7ff-e8de-4df5-816e-d4b212817789)
 
 ## Contacto
-Para cualquier consulta o reporte de bugs, por favor contacta a [maxmateo.carrion@gmail.com].
+Para cualquier consulta o reporte de bugs, por favor contacta a [maxmateo.carrion@gmail.comjuan.carrillo@epn.edu.ec , Jhon.meza@epn.edu.ec].
