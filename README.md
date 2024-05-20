@@ -65,4 +65,4 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para
 ![image](https://github.com/MaxCar31/Music-Manager/assets/141116497/4da9e7ff-e8de-4df5-816e-d4b212817789)
 
 ## Contacto
-Para cualquier consulta o reporte de bugs, por favor contacta a [tu email o username de GitHub].
+Para cualquier consulta o reporte de bugs, por favor contacta a [maxmateo.carrion@gmail.com].
