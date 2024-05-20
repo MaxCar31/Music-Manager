@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: script.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: script.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Clase Cancion que representa una canción con título y duración.
+ */
+class Cancion {
+    /**
+     * Constructor de la clase Cancion.
+     * @param {string} titulo - El título de la canción.
+     * @param {number} duracion - La duración de la canción en minutos.
+     */
+    constructor(titulo, duracion) {
+        this.titulo = titulo;
+        this.duracion = duracion;
+    }
+}
+
+/**
+ * Clase Album que representa un álbum musical con nombre, año de lanzamiento, disquera, artistas y canciones.
+ */
+class Album {
+    /**
+     * Constructor de la clase Album.
+     * @param {string} nombre - El nombre del álbum.
+     * @param {number} anioLanzamiento - El año de lanzamiento del álbum.
+     * @param {string} disquera - La disquera que publicó el álbum.
+     * @param {string} artistas - Los artistas que participaron en el álbum.
+     */
+    constructor(nombre, anioLanzamiento, disquera, artistas) {
+        this.nombre = nombre;
+        this.anioLanzamiento = anioLanzamiento;
+        this.disquera = disquera;
+        this.artistas = artistas;
+        this.canciones = [];
+    }
+
+    /**
+     * Método para agregar una canción al álbum.
+     * @param {Cancion} cancion - La canción a agregar.
+     * @throws {Error} Si el título de la canción ya existe en el álbum.
+     */
+    agregarCancion(cancion) {
+        if (!this.verificarTituloRepetido(cancion.titulo)) {
+            this.canciones.push(cancion);
+        } else {
+            throw new Error(`La canción con el título '${cancion.titulo}' ya existe en el álbum.`);
+        }
+    }
+
+    /**
+     * Método para listar las canciones del álbum.
+     * @returns {Array.&lt;Cancion>} Las canciones del álbum.
+     */
+    listarCanciones() {
+        return this.canciones;
+    }
+
+    /**
+     * Método para verificar si un título de canción ya existe en el álbum.
+     * @param {string} titulo - El título de la canción a verificar.
+     * @returns {boolean} Verdadero si el título ya existe, falso en caso contrario.
+     */
+    verificarTituloRepetido(titulo) {
+        return this.canciones.some(cancion => cancion.titulo === titulo);
+    }
+}
+
+/**
+ * Clase MusicaManager que representa un gestor de música con una lista de álbumes.
+ */
+class MusicaManager {
+    /**
+     * Constructor de la clase MusicaManager.
+     */
+    constructor() {
+        this.albumes = [];
+    }
+
+    /**
+     * Método para agregar un álbum al gestor.
+     * @param {Album} album - El álbum a agregar.
+     */
+    agregarAlbum(album) {
+        this.albumes.push(album);
+    }
+
+    /**
+     * Método para buscar álbumes por año de lanzamiento.
+     * @param {number} anio - El año de lanzamiento a buscar.
+     * @returns {Array.&lt;Album>} Los álbumes que coinciden con el año de lanzamiento.
+     */
+    buscarAlbumesPorAnio(anio) {
+        return this.albumes.filter(album => album.anioLanzamiento == anio);
+    }
+
+    /**
+     * Método para buscar un álbum por nombre.
+     * @param {string} nombre - El nombre del álbum a buscar.
+     * @returns {Album} El álbum que coincide con el nombre, o undefined si no se encuentra.
+     */
+    buscarAlbumPorNombre(nombre) {
+        return this.albumes.find(album => album.nombre === nombre);
+    }
+}
+
+
+/**
+ * Instancia del gestor de música.
+ */
+const manager = new MusicaManager();
+
+/**
+ * Evento submit del formulario de álbumes.
+ * Crea un nuevo álbum con los datos del formulario y lo agrega al gestor de música.
+ */
+document.getElementById('album-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const nombre = document.getElementById('album-name').value;
+    const anioLanzamiento = document.getElementById('album-year').value;
+    const disquera = document.getElementById('album-label').value;
+    const artistas = document.getElementById('album-artists').value;
+
+    const album = new Album(nombre, anioLanzamiento, disquera, artistas);
+    manager.agregarAlbum(album);
+    actualizarAlbumes();  
+    this.reset();
+});
+
+/**
+ * Evento submit del formulario de canciones.
+ * Crea una nueva canción con los datos del formulario y la agrega al álbum seleccionado.
+ */
+document.getElementById('song-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const albumNombre = document.getElementById('album-select').value;
+    const titulo = document.getElementById('song-title').value;
+    const duracion = document.getElementById('song-duration').value;
+
+    // Validar el formato de duración (min:seg)
+    const duracionRegex = /^\d+:[0-5]\d$/;
+    if (!duracionRegex.test(duracion)) {
+        alert('La duración debe estar en el formato min:seg, por ejemplo, 3:30 o 4:20.');
+        return;
+    }
+
+    // Convertir la duración a minutos decimales
+    const [minutos, segundos] = duracion.split(':').map(Number);
+    const duracionDecimal = minutos + segundos / 60;
+
+    const album = manager.buscarAlbumPorNombre(albumNombre);
+    if (album) {
+        try {
+            album.agregarCancion(new Cancion(titulo, duracionDecimal.toFixed(2)));
+            actualizarCanciones(albumNombre);
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+    this.reset();
+});
+
+/**
+ * Evento click del botón de búsqueda.
+ * Busca álbumes por año de lanzamiento y muestra los resultados.
+ */
+document.getElementById('search-button').addEventListener('click', function () {
+    const anio = document.getElementById('search-year').value;
+    const resultados = manager.buscarAlbumesPorAnio(anio);
+    mostrarResultados(resultados);
+});
+
+/**
+ * Evento change de la lista de álbumes.
+ * Actualiza la lista de canciones del álbum seleccionado.
+ */
+document.getElementById('album-list').addEventListener('change', function () {
+    const albumNombre = this.value;
+    actualizarCanciones(albumNombre);
+});
+
+/**
+ * Actualiza las listas de selección de álbumes con los álbumes actuales del gestor de música.
+ */
+function actualizarAlbumes() {
+    const albumSelect = document.getElementById('album-select');
+    const albumList = document.getElementById('album-list');
+    
+    albumSelect.innerHTML = '&lt;option value="">Seleccione un Álbum&lt;/option>';
+    albumList.innerHTML = '&lt;option value="">Seleccione un Álbum&lt;/option>';
+
+    console.log('Actualizando selects con los siguientes álbumes:');
+    console.log(manager.albumes);
+
+    manager.albumes.forEach(album => {
+        const option1 = document.createElement('option');
+        option1.value = album.nombre;
+        option1.textContent = album.nombre;
+        albumSelect.appendChild(option1);
+
+        const option2 = document.createElement('option');
+        option2.value = album.nombre;
+        option2.textContent = album.nombre;
+        albumList.appendChild(option2);
+    });
+}
+
+/**
+ * Actualiza la lista de canciones con las canciones del álbum seleccionado.
+ * @param {string} albumNombre - El nombre del álbum seleccionado.
+ */
+function actualizarCanciones(albumNombre) {
+    const album = manager.buscarAlbumPorNombre(albumNombre);
+    const songList = document.getElementById('song-list');
+    songList.innerHTML = '';
+    if (album) {
+        album.listarCanciones().forEach(cancion => {
+            // Convertir la duración decimal de nuevo a min:seg para mostrar
+            const minutos = Math.floor(cancion.duracion);
+            const segundos = Math.round((cancion.duracion - minutos) * 60);
+            const duracionFormatted = `${minutos}:${segundos.toString().padStart(2, '0')}`;
+            const li = document.createElement('li');
+            li.textContent = `${cancion.titulo} - ${duracionFormatted} min`;
+            songList.appendChild(li);
+        });
+    }
+}
+
+/**
+ * Muestra los álbumes resultantes de la búsqueda en la lista de resultados.
+ * @param {Array.&lt;Album>} albumes - Los álbumes a mostrar.
+ */
+function mostrarResultados(albumes) {
+    const searchResults = document.getElementById('search-results');
+    searchResults.innerHTML = '';
+    albumes.forEach(album => {
+        const li = document.createElement('li');
+        li.textContent = `${album.nombre} (${album.anioLanzamiento}) - ${album.disquera}`;
+        searchResults.appendChild(li);
+    });
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Album.html">Album</a></li><li><a href="Cancion.html">Cancion</a></li><li><a href="MusicaManager.html">MusicaManager</a></li></ul><h3>Global</h3><ul><li><a href="global.html#actualizarAlbumes">actualizarAlbumes</a></li><li><a href="global.html#actualizarCanciones">actualizarCanciones</a></li><li><a href="global.html#manager">manager</a></li><li><a href="global.html#mostrarResultados">mostrarResultados</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Sun May 19 2024 19:46:54 GMT-0500 (hora de Ecuador)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Manager</title>
+    <link rel="stylesheet" href="stylesheet.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Music Manager</h1>
+        <div class="form-section">
+            <h2>Agregar Nuevo Álbum</h2>
+            <form id="album-form">
+                <input type="text" id="album-name" placeholder="Nombre del Álbum" required>
+                <input type="number" id="album-year" placeholder="Año de Lanzamiento" required>
+                <input type="text" id="album-label" placeholder="Disquera" required>
+                <input type="text" id="album-artists" placeholder="Artistas" required>
+                <button type="submit">Agregar Álbum</button>
+            </form>
+        </div>
+
+        <div class="form-section">
+            <h2>Agregar Canción al Álbum</h2>
+            <form id="song-form">
+                <select id="album-select" required>
+                    <option value="">Seleccione un Álbum</option>
+                </select>
+                <input type="text" id="song-title" placeholder="Título de la Canción" required>
+                <input type="text" id="song-duration" placeholder="Duración (min:seg)" required>
+                <button type="submit">Agregar Canción</button>
+            </form>
+        </div>
+
+        <div class="form-section">
+            <h2>Buscar Álbum por Año</h2>
+            <input type="number" id="search-year" placeholder="Año de Lanzamiento">
+            <button id="search-button">Buscar</button>
+            <ul id="search-results"></ul>
+        </div>
+
+        <div class="form-section">
+            <h2>Ver Canciones de un Álbum</h2>
+            <select id="album-list" required>
+                <option value="">Seleccione un Álbum</option>
+            </select>
+            <ul id="song-list"></ul>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script src="tests.js"></script>
+</body>
+</html>
